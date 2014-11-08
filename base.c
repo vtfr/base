@@ -89,7 +89,7 @@ int main (int argc, char *argv[])
 	if ((base_saida < 2   || base_saida > 36)
 	 || (base_entrada < 2 || base_entrada > 36)) {
 		fprintf(stderr, "Base invalida. As bases devem ser "
-		                "valores numéricos entre 2 e 36");
+		                "valores numéricos entre 2 e 36\n");
 		return 2;
 	}
 	
