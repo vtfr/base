@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-/* Representações numéricas */
+/* Representações numéricas; também conhecidas como dígitos */
 char repr[] = {
 	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
 	'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
@@ -27,7 +27,7 @@ void representar_num_base (char *buffer, size_t size, uint32_t valor, uint8_t ba
 	
 	/* Representa os dígitos na ordem correta voltando o index de dígitos. É
 	   necessário o uso do pre-decremento, em digitsIndex, para acessar o byte
-	   anterior ao index, o que seria uma leitura da memória no sentido inverso. */
+	   anterior ao index, o que seria uma leitura da memória no sentido inverso */
 	do { *buffer++ = repr[digits[--digitsIndex]]; }
 	while (digitsIndex && (--size > 1));
 	
@@ -35,7 +35,7 @@ void representar_num_base (char *buffer, size_t size, uint32_t valor, uint8_t ba
 	*buffer = '\0';
 }
 
-/* Converte uma string para um valor de base. */
+/* Converte uma string para um valor de base */
 uint8_t converter_string_base (char *string)
 {
 	if (!string)
@@ -43,8 +43,7 @@ uint8_t converter_string_base (char *string)
 		
 	/* Converte nossa string. O segundo argumento determina a posição de término
 	   da leitura na string fornecida no primeiro argumento. Se a posição for,
-	   de fato, no fim da string (NUL), então a string foi completamente
-	   lida sem erros. */
+	   de fato, no fim da string (NUL), então a string foi lida corretamente */
 	uint8_t base = strtol(string, &string, 10);	
 	return *string == '\0' ? base : 0;
 }
