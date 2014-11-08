@@ -3,10 +3,10 @@
 #include <stdint.h>
 
 /* Representações numéricas */
-char repr[] = { 
-	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 
-	'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
-	'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 
+char repr[] = {
+	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+	'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+	'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
 	'U', 'W', 'X', 'Y', 'Z'
 };
 
@@ -28,7 +28,7 @@ void representar_num_base (char *buffer, size_t size, uint32_t valor, uint8_t ba
 	/* Representa os dígitos na ordem correta voltando o index de dígitos. É
 	   necessário o uso do pre-decremento, em digitsIndex, para acessar o byte
 	   anterior ao index, o que seria uma leitura da memória no sentido inverso. */
-	do { *buffer++ = repr[digits[--digitsIndex]]; } 
+	do { *buffer++ = repr[digits[--digitsIndex]]; }
 	while (digitsIndex && (--size > 1));
 	
 	/* Adiciona o NUL */
@@ -38,7 +38,7 @@ void representar_num_base (char *buffer, size_t size, uint32_t valor, uint8_t ba
 /* Converte uma string para um valor de base. */
 unsigned char converter_string_base (char *string)
 {
-	if (!string) 
+	if (!string)
 		return 0;
 		
 	/* Converte nossa string. O segundo argumento determina a posição de término
@@ -76,7 +76,7 @@ int main (int argc, char *argv[])
 		       "    %s 2 16 10100111001\n"
 		       "\n"
 		       "2014 Victor \"vtfrvl\" Franco (https://github.com/vtfrvl/)\n",
-		       argv[0], argv[0], 
+		       argv[0], argv[0],
 		       argv[0], argv[0]);
 		return 1;
 	}
@@ -87,7 +87,8 @@ int main (int argc, char *argv[])
 	
 	/* Verifica as margens das bases de entrada/saida */
 	if ((base_saida < 2   || base_saida > 36)
-	 || (base_entrada < 2 || base_entrada > 36)) {
+	 || (base_entrada < 2 || base_entrada > 36))
+	{
 		fprintf(stderr, "Base invalida. As bases devem ser "
 		                "valores numéricos entre 2 e 36\n");
 		return 2;
@@ -97,7 +98,8 @@ int main (int argc, char *argv[])
 	valor = strtoul(argv[3], &argv[3], base_entrada);
 
 	/* Verifica se toda a string foi lida corretamente */
-	if (*argv[3] != '\0') {
+	if (*argv[3] != '\0')
+	{
 		fprintf(stderr, "Fragmento \"%s\" inesperado.\n", argv[3]);
 		return 3;
 	}
