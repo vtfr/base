@@ -36,7 +36,7 @@ void representar_num_base (char *buffer, size_t size, uint32_t valor, uint8_t ba
 }
 
 /* Converte uma string para um valor de base. */
-unsigned char converter_string_base (char *string)
+uint8_t converter_string_base (char *string)
 {
 	if (!string)
 		return 0;
@@ -76,8 +76,7 @@ int main (int argc, char *argv[])
 		       "    %s 2 16 10100111001\n"
 		       "\n"
 		       "2014 Victor \"vtfrvl\" Franco (https://github.com/vtfrvl/)\n",
-		       argv[0], argv[0],
-		       argv[0], argv[0]);
+		       argv[0], argv[0], argv[0], argv[0]);
 		return 1;
 	}
 	
