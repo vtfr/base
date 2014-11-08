@@ -20,14 +20,19 @@ execução:
     $ base [base de entrada] [base de saída] [valor numérico]
 
 Exemplos:
-* de decimal para hexadecimal:
+* convertendo de decimal para hexadecimal:
   ```
   $ base 10 16 1337
   ```
 
-* de hexadecimal para binário:
+* convertendo de hexadecimal para binário:
   ```
-  $ base 16 2 DEaDBeEF
+  $ base 16 2 DEadBEff
   ```
   
+* criando um arquivo "arquivo.txt" com o resultadado da conversão hexadecimal
+FF00 para decimal, redirecionando o STDIN para o arquivo.
+  ```
+  $ base 16 2 DEaDBeEF
+  ``` 
 etc
