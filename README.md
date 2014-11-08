@@ -1,4 +1,4 @@
-m base
+base
 ====
 Programa simpes de conversão de bases que segue a filosofia UNIX. Aceita qualquer 
 valor inteiro de 32 bits (entre 0 e 4,294,967.295, em decimal) e converte para 
