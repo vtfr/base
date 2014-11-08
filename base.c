@@ -67,7 +67,7 @@ int main (int argc, char *argv[])
 		       "IX. Aceita qualquer valor inteiro de 32 bits (entre 0 e 4,967."
 		       "295, em decimal) e converte para qualquer valor nessa mesma fa"
 		       "ixa. Aceita bases entre 2 e 36, devido a limitação representat"
-		       "iva de 10 digitos (0-10) + 26 letras (a-Z ou A-Z)."
+		       "iva de 10 digitos (0-9) + 26 letras (a-z ou A-Z)."
 		       "\n"
 		       "  Exemplo:\n"
 		       "    %s 10 16 1028\n"
