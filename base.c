@@ -1,175 +1,111 @@
-/* gcc base.c -o base -std=c99 */
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <stdint.h>
 
-/* Representa binário */
-void representar_binario (unsigned int valor)
+/* Representações numéricas */
+char repr[] = { 
+	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 
+	'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
+	'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 
+	'U', 'W', 'X', 'Y', 'Z'
+};
+
+/* Representa um número em uma base específica */
+void representar_num_base (char *buffer, size_t size, uint32_t valor, uint8_t base)
 {
-	/* 32 bits + 1 nul */
-	char buffer[33];
-	buffer[32] = '\0';
+	/* Caso seja fornecido um buffer inválido ou tenha tamanho menor que dois,
+	   o que seria insuficiente para representar um dígito e terminar com NUL */
+	if (!buffer || size < 2 || base < 2) return;
 	
-	/* i = byte to buffer = bit do valor */
-	for (unsigned char i = 0; i < 32; i++)
-		buffer[31 - i] = (valor & (1 << i)) ? '1' : '0';
+	/* Como trabalhamos com 32 bits e representação mínima de 2 bits, o tamanho
+	   máximo de dígitos será 32 */
+	uint8_t digits[32], digitsIndex = 0;
 	
-	/* Remove bits desnecessários incrementando o início da string, caso o bit
-	   seja zero. 
-	   
-	   Demostração prática:
-	   
-	   00000000000010000010000000010001
-	   ↓
-	   INICIO DA STRING
-	   
-	   ...
-
-	   00000000000010000010000000010001
-	               ↓
-	               INICIO DA STRING
-	*/
-	char *inicio = buffer;
+	/* Separa os digitos de trás para frente */
+	do { digits[digitsIndex++] = valor % base; }
+	while ((valor /= base) && digitsIndex < 32);
 	
-	/* Procura um dígito '1' */
-	while (*inicio && *inicio != '1')
-		inicio++;
+	/* Representa os dígitos na ordem correta voltando o index de dígitos. É
+	   necessário o uso do pre-decremento, em digitsIndex, para acessar o byte
+	   anterior ao index, o que seria uma leitura da memória no sentido inverso. */
+	do { *buffer++ = repr[digits[--digitsIndex]]; } 
+	while (digitsIndex && (--size > 1));
 	
-	/* Caso tenhamos chegagado ao último caracter da string sem achar um '1'
-	   sequer, volta o ponteiro um caracter para representar o último zero 
-	*/
-	if (!*inicio)
-		inicio--;
-	
-	/* Desenha */
-	printf("%s\n", inicio);
+	/* Adiciona o NUL */
+	*buffer = '\0';
 }
 
-
-
-/* Verifica se uma string é um inteiro */
-unsigned char verificar_inteiro (char *string)
-{
-	/* Trivial */
-	while (*string)
-	{
-		/* Caracter está entre '0' e '9' */
-		if (*string < '0' || *string > '9')
-			return 0;
-
-		string++;
-	}
-
-	return 1;
-}
-
-
-
-/* Converte uma string para um valor de base. 
-   Essa função funciona, sim, mas é 80/20
-   
-   TODO implementar unário
-*/
+/* Converte uma string para um valor de base. */
 unsigned char converter_string_base (char *string)
 {
-	/* Caso o ponteiro seja nulo */
-	if (!string)
+	if (!string) 
 		return 0;
-
-	/* Caso a string seja um valor numérico, converte-a para um inteiro */
-	if (verificar_inteiro(string))
-		return atoi(string);
-	
-	/* Caso a string não seja um número, converte para um, utilizando a tabela
-	   já feita. */
-	     if (strcmp(string, "una") == 0) return 1;
-	else if (strcmp(string, "bin") == 0) return 2;
-	else if (strcmp(string, "oct") == 0) return 8;
-	else if (strcmp(string, "dec") == 0) return 10;
-	else if (strcmp(string, "hex") == 0) return 16;
-	
-	/* Caso não seja uma base válida */
-	return 0;
+		
+	/* Converte nossa string. O segundo argumento determina a posição de término
+	   da leitura na string fornecida no primeiro argumento. Se a posição for,
+	   de fato, no fim da string (NUL), então a string foi completamente
+	   lida sem erros. */
+	uint8_t base = strtol(string, &string, 10);	
+	return *string == '\0' ? base : 0;
 }
 
 
 
 int main (int argc, char *argv[])
 {
+	char buffer[33];
+	uint8_t base_entrada, base_saida;
+	uint32_t valor;
+	
 	/* Caso o programa seja executado com um número de argumentos diferetentes
 	   de 4, mostra a mensagem de uso. Vale lembrar que o nome do programa é
-	   o argumento de número 0 
-	*/
+	   o argumento de número 0 */
 	if (argc != 4)
 	{
 		printf("Uso %s [BASE DE ENTRADA] [BASE DE SAIDA] valor\n"
 		       "\n"
-		       "Esse programa aceita qualquer base entre 2 e 16 como entrada, "
-		       "mas restringe a saida para as bases 2, 8, 10 e 16.\n"
+		       "Programa simpes de conversão de bases que segue a filosofia UN"
+		       "IX. Aceita qualquer valor inteiro de 32 bits (entre 0 e 4,967."
+		       "295, em decimal) e converte para qualquer valor nessa mesma fa"
+		       "ixa. Aceita bases entre 2 e 36, devido a limitação representat"
+		       "iva de 10 digitos (0-10) + 26 letras (a-Z ou A-Z)."
 		       "\n"
 		       "  Exemplo:\n"
-		       "    %s 16 10 f044\n"
-		       "    %s hex dec deadbeef\n"
-		       "    %s 2 16 -10100111001\n"
+		       "    %s 10 16 1028\n"
+		       "    %s 16 10 deadbeef\n"
+		       "    %s 2 16 10100111001\n"
 		       "\n"
-		       "Copyleft 2014 Victor Franco (https://github.com/vtfrvl/)\n",
+		       "2014 Victor \"vtfrvl\" Franco (https://github.com/vtfrvl/)\n",
 		       argv[0], argv[0], 
 		       argv[0], argv[0]);
 		return 1;
 	}
 	
 	/* Converte as bases e valida cada uma delas */
-	unsigned char base_entrada, base_saida;
 	base_entrada = converter_string_base(argv[1]);
 	base_saida   = converter_string_base(argv[2]);
 	
-	if (!base_entrada || !base_saida)
-	{
-		printf("Base \"%s\" inválida.\n", base_entrada ? argv[2] : argv[1]);
+	/* Verifica as margens das bases de entrada/saida */
+	if ((base_saida < 2   || base_saida > 36)
+	 || (base_entrada < 2 || base_entrada > 36)) {
+		fprintf(stderr, "Base invalida. As bases devem ser "
+		                "valores numéricos entre 2 e 36");
 		return 2;
 	}
 	
-	if (base_entrada < 2 || base_entrada > 32)
-	{
-		printf("Base de entrada \"%s\" não está entre 2 e 16\n", argv[1]);
+	/* Lê a string de base. */
+	valor = strtoul(argv[3], &argv[3], base_entrada);
+
+	/* Verifica se toda a string foi lida corretamente */
+	if (*argv[3] != '\0') {
+		fprintf(stderr, "Fragmento \"%s\" inesperado.\n", argv[3]);
 		return 3;
 	}
 	
-	if (!(base_saida == 2  || base_saida == 8
-	   || base_saida == 10 || base_saida == 16 ))
-	{
-		printf("Base de saida \"%s\" não é válida.\n"
-		       "Bases de saida válidas: 2 (bin), 8 (oct), "
-		       "10 (dec), 16 (hex)\n", argv[2]);
-		return 4;
-	}
+	/* Imprime a representação numérica da base */
+	representar_num_base(buffer, 32, valor, base_saida);
+	puts(buffer);
 	
-	/* Converte a base.
-		Essa parte do código tem um funcionamento interessante. Na função strtol,
-		o segundo argumento é um ponteiro para um ponteiro, onde este último
-		apontará para o último caracter lido. Se o último caracter lido for o
-		último caracter da string que queremos ler, então a função conseguiu
-		interpretar a string completamente.
-	 */
-	char *final;
-	unsigned int valor = strtoul(argv[3], &final, base_entrada);
-
-	/* Se o ponteiro para o final da string estiver, de fato, no final da
-	   string... */
-	if (*final != '\0')
-	{
-		printf("Valor \"%s\" inválido.\n", argv[3]);
-		return 5;
-	}
-	
-	/* Representa a string */
-	switch (base_saida)
-	{
-		case 2:  representar_binario(valor); break;
-		case 8:  printf("%o\n", valor);      break;
-		case 10: printf("%u\n", valor);      break;
-		case 16: printf("%X\n", valor);      break;
-	}
-	
+	/* Retorna sucesso */
 	return 0;
 }
