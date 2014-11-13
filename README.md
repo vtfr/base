@@ -3,7 +3,7 @@ base
 Programa simpes de conversão de bases que segue a filosofia UNIX. Aceita qualquer 
 valor inteiro de 32 bits (entre 0 e 4,294,967,295, em decimal) e converte para 
 qualquer valor nessa mesma faixa. Aceita bases entre 2 e 36, devido a limitação
-representativa de 10 dígitos (0-9) + 26 letras (a-z ou A-Z).
+representativa de 10 números (0-9) + 26 letras (a-z ou A-Z).
 
 ## Instalação
 Clone esse repositório e compile utilizando qualquer compilador compativel com 
