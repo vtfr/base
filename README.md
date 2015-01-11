@@ -31,8 +31,8 @@ Exemplos:
   ```
   
 * criando um arquivo "arquivo.txt" com o resultadado da conversão hexadecimal
-0xFF00 para decimal, redirecionando o STDIN para o arquivo.
+0xFF00 para decimal, redirecionando o STDOUT para o arquivo.
   ```
-  $ base 16 10 FF00>arquivo.txt
+  $ base 16 10 FF00 > arquivo.txt
   ``` 
 etc
